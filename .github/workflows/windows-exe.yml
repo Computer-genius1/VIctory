@@ -9,7 +9,7 @@ on:
       - "Cargo.toml"
       - "Cargo.lock"
       - "rust-toolchain.toml"
-      - ".github/workflows/windows-exe.yml"
+      - "Start-VIctory.bat"\n      - "README.md"\n      - ".github/workflows/windows-exe.yml"
 
 permissions:
   contents: read
