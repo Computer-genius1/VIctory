@@ -53,6 +53,21 @@ What each part does today and what it still needs:
 | Textures | Console tiled layouts and detiling for the modes the title uses | Render-target metadata planes |
 | Series S mode | Menus, loading and the world run with the PC upscaler (`VICTORY_FIDELITYFX_DIR`, about 1 s a frame) | The title's own upscaler DLLs: six of their passes are untranslated, so their picture is wrong |
 
+
+
+## Windows launcher (experimental)
+
+Extract the Windows package, then double-click `Start-VIctory.bat`.
+The launcher keeps its console open, optionally records your own game folder
+in a local `victory.local.toml` file (not committed to the repository), and
+runs the configuration check so errors remain visible. Skip the folder prompt
+to check the app without configuring game files.
+
+This is a setup helper, not a finished GUI or one-click game launcher.
+The game files are not included. Shader translation and the experimental
+title-run command remain manual; see the commands below. If the launcher
+reports an error, keep the window open and copy its output for troubleshooting.
+
 ## Getting started
 
 Requirements: Windows 10/11 x64, a CPU with AVX2, a Direct3D 12 GPU with
