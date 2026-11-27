@@ -9,7 +9,9 @@ on:
       - "Cargo.toml"
       - "Cargo.lock"
       - "rust-toolchain.toml"
-      - "Start-VIctory.bat"\n      - "README.md"\n      - ".github/workflows/windows-exe.yml"
+      - "Start-VIctory.bat"
+      - "README.md"
+      - ".github/workflows/windows-exe.yml"
 
 permissions:
   contents: read
@@ -22,7 +24,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Rust stable toolchain
+      - name: Install pinned Rust toolchain
         uses: dtolnay/rust-toolchain@stable
 
       - name: Confirm Rust installation
@@ -32,17 +34,27 @@ jobs:
         run: cargo build --release --locked -p victory
 
       - name: Confirm executable exists
+        shell: pwsh
         run: |
           if (!(Test-Path "target/release/victory.exe")) {
             throw "Build did not produce target/release/victory.exe"
           }
           Get-Item "target/release/victory.exe" | Format-List Name,Length,FullName
-        shell: pwsh
 
-      - name: Upload executable artifact
+      - name: Package launcher and documentation
+        shell: pwsh
+        run: |
+          $package = Join-Path $PWD "VIctory-Windows-x64"
+          New-Item -ItemType Directory -Force -Path $package | Out-Null
+          Copy-Item "target/release/victory.exe" $package
+          Copy-Item "Start-VIctory.bat" $package
+          Copy-Item "README.md" $package
+          Compress-Archive -Path "$package/*" -DestinationPath "VIctory-Windows-x64.zip" -Force
+
+      - name: Upload packaged launcher
         uses: actions/upload-artifact@v4
         with:
-          name: VIctory-Windows-x64
-          path: target/release/victory.exe
+          name: VIctory-Windows-x64-Launcher
+          path: VIctory-Windows-x64.zip
           if-no-files-found: error
           retention-days: 14
