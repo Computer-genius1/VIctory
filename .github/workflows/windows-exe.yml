@@ -22,11 +22,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@master
+      - name: Install Rust stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Confirm Rust installation
+        run: rustc --version && cargo --version
 
       - name: Build release executable
         run: cargo build --release --locked -p victory
+
+      - name: Confirm executable exists
+        run: |
+          if (!(Test-Path "target/release/victory.exe")) {
+            throw "Build did not produce target/release/victory.exe"
+          }
+          Get-Item "target/release/victory.exe" | Format-List Name,Length,FullName
+        shell: pwsh
 
       - name: Upload executable artifact
         uses: actions/upload-artifact@v4
