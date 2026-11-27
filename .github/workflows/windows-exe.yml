@@ -1,0 +1,37 @@
+name: Windows EXE Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.rs"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
+      - ".github/workflows/windows-exe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    name: Build VIctory for Windows x64
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+
+      - name: Build release executable
+        run: cargo build --release --locked -p victory
+
+      - name: Upload executable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VIctory-Windows-x64
+          path: target/release/victory.exe
+          if-no-files-found: error
+          retention-days: 14
